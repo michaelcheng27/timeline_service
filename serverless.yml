@@ -18,7 +18,7 @@ functions:
     events:
       - http:
           path: timeline
-          method: get
+          method: post
 
 package:
  exclude:

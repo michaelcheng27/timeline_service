@@ -3,6 +3,8 @@ package cmd
 import (
 	"encoding/json"
 
+	log "github.com/sirupsen/logrus"
+
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -19,7 +21,7 @@ type Timeline struct {
 }
 
 type TimelineRequest struct {
-	PagingToken string
+	PagingToken *string
 }
 
 type Moment struct {
@@ -32,7 +34,7 @@ type Moment struct {
 }
 
 func Serve(request TimelineRequest) (Timeline, error) {
-	moments, nextToken, err := getMoments(&request.PagingToken)
+	moments, nextToken, err := getMoments(request.PagingToken)
 	if err != nil {
 		return Timeline{}, err
 	}
@@ -51,6 +53,7 @@ func getMoments(pagingToken *string) ([]Moment, *string, error) {
 	var lastEvalutedKey map[string]*dynamodb.AttributeValue
 	svc := dynamodb.New(sess)
 	if pagingToken != nil {
+		log.Infof("pagingToken = %v", *pagingToken)
 		json.Unmarshal([]byte(*pagingToken), &lastEvalutedKey)
 	}
 
@@ -70,7 +73,7 @@ func getMoments(pagingToken *string) ([]Moment, *string, error) {
 	count := int(*resp.Count)
 
 	if count == 0 {
-		return []Moment{}, nil, fmt.Errorf("count is 0")
+		return []Moment{}, nil, nil
 	}
 	moments := make([]Moment, count)
 	for i := 0; i < count; i++ {

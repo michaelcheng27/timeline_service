@@ -12,16 +12,15 @@ import (
 )
 
 // Response is of type APIGatewayProxyResponse since we're leveraging the
-// AWS Lambda Proxy Request functionality (default behavior)
-//
-// https://serverless.com/framework/docs/providers/aws/events/apigateway/#lambda-proxy-integration
 type Response events.APIGatewayProxyResponse
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
-func Handler(event events.Event, ctx context.Context) (Response, error) {
+func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (Response, error) {
 	var buf bytes.Buffer
-
-	timeline, err := cmd.Serve(cmd.TimelineRequest{})
+	log.Infof("event = %v", event)
+	var request cmd.TimelineRequest
+	err := json.Unmarshal([]byte(event.Body), &request)
+	timeline, err := cmd.Serve(request)
 	if err != nil {
 		return Response{StatusCode: 500}, err
 	}
