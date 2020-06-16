@@ -18,7 +18,7 @@ import (
 type Response events.APIGatewayProxyResponse
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
-func Handler(ctx context.Context) (Response, error) {
+func Handler(event events.Event, ctx context.Context) (Response, error) {
 	var buf bytes.Buffer
 
 	timeline, err := cmd.Serve(cmd.TimelineRequest{})

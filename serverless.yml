@@ -6,19 +6,18 @@ provider:
   name: aws
   runtime: go1.x
   region: us-west-2
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'dynamodb:Scan'
+      Resource: 'arn:aws:dynamodb:us-west-2:*:table/Moments'
 
 functions:
-  hello:
-    handler: bin/hello
+  timeline:
+    handler: bin/timeline
     events:
       - http:
-          path: hello
-          method: get
-  world:
-    handler: bin/world
-    events:
-      - http:
-          path: world
+          path: timeline
           method: get
 
 package:
