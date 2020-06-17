@@ -11,7 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// Response is of type APIGatewayProxyResponse since we're leveraging the
+// Response is of type APIGatewayProxyResponse since we"re leveraging the
 type Response events.APIGatewayProxyResponse
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
@@ -32,8 +32,10 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (Response
 		IsBase64Encoded: false,
 		Body:            buf.String(),
 		Headers: map[string]string{
-			"Content-Type":           "application/json",
-			"X-MyCompany-Func-Reply": "hello-handler",
+			"Content-Type":                 "application/json",
+			"Access-Control-Allow-Headers": "Content-Type, access-control-allow-origin",
+			"Access-Control-Allow-Origin":  "*",
+			"Access-Control-Allow-Methods": "OPTIONS,POST",
 		},
 	}
 

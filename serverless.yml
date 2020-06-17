@@ -1,4 +1,4 @@
-service: aws-golang-simple-http-endpoint
+service: timeline
 
 frameworkVersion: ">=1.28.0 <2.0.0"
 
@@ -10,7 +10,12 @@ provider:
     - Effect: 'Allow'
       Action:
         - 'dynamodb:Scan'
+        - 'dynamodb:PutItem'
       Resource: 'arn:aws:dynamodb:us-west-2:*:table/Moments'
+    - Effect: 'Allow'
+      Action:
+        - 's3:GetObject'
+      Resource: 'arn:aws:s3:::timeline-moments/*'
 
 functions:
   timeline:
@@ -19,6 +24,13 @@ functions:
       - http:
           path: timeline
           method: post
+  timeline_s3_handler:
+    handler: bin/s3_handler
+    events:
+      - s3:
+          bucket: timeline-moments
+          event: s3:ObjectCreated:*
+          existing: true
 
 package:
  exclude:
