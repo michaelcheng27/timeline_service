@@ -9,5 +9,5 @@ require (
 	github.com/dsoprea/go-exif/v2 v2.0.0-20200612063833-1b5ecc84b107
 	github.com/google/uuid v1.1.1
 	github.com/sirupsen/logrus v1.6.0
-	golang.org/x/sys v0.0.0-20200615200032-f1bc736245b1 // indirect
+	golang.org/x/sys v0.1.0 // indirect
 )
